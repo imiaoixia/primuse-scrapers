@@ -1,0 +1,49 @@
+{
+  "id": "qqmusic",
+  "name": "QQ音乐",
+  "version": 1,
+  "icon": "music.note",
+  "color": "#31C27C",
+  "rateLimit": 500,
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Referer": "https://y.qq.com/",
+    "Origin": "https://y.qq.com"
+  },
+  "capabilities": ["metadata", "cover", "lyrics"],
+  "search": {
+    "url": "https://u.y.qq.com/cgi-bin/musicu.fcg",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyTemplate": "{\"comm\":{\"ct\":11,\"cv\":\"1003006\"},\"req_1\":{\"module\":\"music.search.SearchCgiService\",\"method\":\"DoSearchForQQMusicDesktop\",\"param\":{\"query\":\"{{query}}\",\"page_num\":1,\"num_per_page\":{{limit}},\"search_type\":0}}}",
+    "script": "var req = response.req_1 || {}; var data = req.data || {}; var body = data.body || {}; var song = body.song || {}; var list = song.list || []; var items = []; for (var i = 0; i < list.length; i++) { var s = list[i]; var mid = s.mid || ''; if (!mid) continue; var singers = s.singer || []; var artistName = singers.map(function(a){return a.name}).join(' / '); var album = s.album || {}; var albumMid = album.mid || ''; var albumName = album.name; var coverUrl = albumMid ? 'https://y.qq.com/music/photo_new/T002R300x300M000' + albumMid + '.jpg' : null; items.push({id: mid, title: s.name||'', artist: artistName||null, album: albumName||null, durationMs: (s.interval||0)*1000, coverUrl: coverUrl}); } return items;"
+  },
+  "detail": {
+    "url": "https://u.y.qq.com/cgi-bin/musicu.fcg",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyTemplate": "{\"comm\":{\"ct\":11,\"cv\":\"1003006\"},\"req_1\":{\"module\":\"music.pf_song_detail_svr\",\"method\":\"get_song_detail_yqq\",\"param\":{\"song_mid\":\"{{id}}\"}}}",
+    "script": "var req = response.req_1 || {}; var data = req.data || {}; var info = data.track_info || {}; var singers = info.singer || []; var artistName = singers.map(function(a){return a.name}).join(' / '); var album = info.album || {}; var albumMid = album.mid || ''; var coverUrl = albumMid ? 'https://y.qq.com/music/photo_new/T002R300x300M000' + albumMid + '.jpg' : null; var year = null; if (info.time_public) { var y = parseInt(info.time_public.substring(0,4)); if (y > 0) year = y; } return {title: info.name||'', artist: artistName||null, album: album.name||null, year: year, coverUrl: coverUrl, trackNumber: info.index_album||null, genres: info.genre ? [info.genre] : null};"
+  },
+  "cover": {
+    "url": "https://u.y.qq.com/cgi-bin/musicu.fcg",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyTemplate": "{\"comm\":{\"ct\":11,\"cv\":\"1003006\"},\"req_1\":{\"module\":\"music.pf_song_detail_svr\",\"method\":\"get_song_detail_yqq\",\"param\":{\"song_mid\":\"{{id}}\"}}}",
+    "script": "var req = response.req_1 || {}; var data = req.data || {}; var info = data.track_info || {}; var album = info.album || {}; var albumMid = album.mid || ''; if (!albumMid) return []; return [{coverUrl: 'https://y.qq.com/music/photo_new/T002R300x300M000' + albumMid + '.jpg', thumbnailUrl: 'https://y.qq.com/music/photo_new/T002R150x150M000' + albumMid + '.jpg'}];"
+  },
+  "lyrics": {
+    "url": "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid={{id}}&format=json&nobase64=1&g_tk=5381",
+    "method": "GET",
+    "headers": {
+      "Referer": "https://y.qq.com/portal/player.html"
+    },
+    "script": "if (response.retcode !== 0) return null; var lyric = response.lyric || ''; if (!lyric) return null; return {lrcContent: lyric};"
+  }
+}

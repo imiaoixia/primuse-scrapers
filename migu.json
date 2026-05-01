@@ -1,0 +1,49 @@
+{
+  "id": "migu",
+  "name": "咪咕音乐",
+  "version": 1,
+  "icon": "music.note.list",
+  "color": "#FF0654",
+  "rateLimit": 300,
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36",
+    "Referer": "https://music.migu.cn/"
+  },
+  "capabilities": ["metadata", "cover", "lyrics"],
+  "search": {
+    "url": "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/search_all.do",
+    "method": "GET",
+    "params": {
+      "ua": "Android_migu",
+      "version": "5.0.1",
+      "text": "{{query}}",
+      "pageNo": "1",
+      "pageSize": "{{limit}}",
+      "searchSwitch": "{\"song\":1}"
+    },
+    "script": "if (response.code !== '000000') return []; var sr = response.songResultData || {}; var list = sr.result || []; var items = []; for (var i = 0; i < list.length; i++) { var s = list[i]; var cid = s.copyrightId || s.id || ''; if (!cid) continue; var singers = s.singers || []; var artistName = singers.map(function(a){return a.name}).join(' / '); var albums = s.albums || []; var albumName = albums.length ? albums[0].name : null; var albumId = albums.length ? (albums[0].id||'') : ''; var imgs = s.imgItems || []; var cover = imgs.length ? imgs[0].img : ''; var eid = [cid, s.name||'', artistName, albumName||'', albumId, cover, '0'].join('|'); items.push({id: eid, title: s.name||'', artist: artistName||null, album: albumName, coverUrl: cover||null}); } return items;"
+  },
+  "detail": {
+    "url": "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/search_all.do",
+    "method": "GET",
+    "params": {
+      "ua": "Android_migu",
+      "version": "5.0.1",
+      "text": "{{id}}",
+      "pageNo": "1",
+      "pageSize": "1",
+      "searchSwitch": "{\"song\":1}"
+    },
+    "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 7) return null; var cover = parts[5] || ''; if (cover) cover = cover.replace('_120', '_500').replace('/120/', '/500/').replace('_400', '_800').replace('/400/', '/800/'); return {title: parts[1]||'', artist: parts[2]||null, album: parts[3]||null, coverUrl: cover||null};"
+  },
+  "cover": {
+    "url": "https://example.com",
+    "method": "GET",
+    "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 6) return []; var cover = parts[5] || ''; if (!cover) return []; var hd = cover.replace('_120', '_500').replace('/120/', '/500/').replace('_400', '_800').replace('/400/', '/800/'); return [{coverUrl: hd, thumbnailUrl: cover}];"
+  },
+  "lyrics": {
+    "url": "https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId={{id}}",
+    "method": "GET",
+    "script": "if (response.returnCode !== '000000') return null; var lyric = response.lyric || ''; if (!lyric) return null; return {lrcContent: lyric};"
+  }
+}

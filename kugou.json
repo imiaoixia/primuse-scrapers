@@ -1,0 +1,60 @@
+{
+  "id": "kugou",
+  "name": "酷狗音乐",
+  "version": 2,
+  "icon": "waveform",
+  "color": "#2196F3",
+  "rateLimit": 300,
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Referer": "https://www.kugou.com/"
+  },
+  "capabilities": ["metadata", "cover", "lyrics"],
+  "sslTrustDomains": ["kugou.com", "mobilecdn.kugou.com", "imge.kugou.com", "krcs.kugou.com", "myqcloud.com"],
+  "search": {
+    "url": "https://mobilecdn.kugou.com/api/v3/search/song",
+    "method": "GET",
+    "params": {
+      "keyword": "{{query}}",
+      "page": "1",
+      "pagesize": "{{limit}}",
+      "showtype": "1"
+    },
+    "script": "var data = response.data || {}; var info = data.info || []; var results = []; for (var i = 0; i < info.length; i++) { var s = info[i]; var hash = s.hash || ''; var albumId = String(s.album_id || '0'); var tp = s.trans_param || {}; var cover = tp.union_cover || ''; if (cover) cover = cover.replace('{size}', '150'); var eid = [hash, albumId, s.songname||'', s.singername||'', String(s.duration||0), cover].join('|'); results.push({id: eid, title: s.songname||'', artist: s.singername||'', album: s.album_name, durationMs: (s.duration||0)*1000, coverUrl: cover||null}); } return results;"
+  },
+  "detail": {
+    "url": "https://mobilecdn.kugou.com/api/v3/search/song",
+    "method": "GET",
+    "params": {
+      "keyword": "{{id}}",
+      "page": "1",
+      "pagesize": "1",
+      "showtype": "1"
+    },
+    "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 6) return null; var cover = parts[5] || ''; if (cover) cover = cover.replace('/150/', '/400/'); return {title: parts[2], artist: parts[3]||null, coverUrl: cover||null};"
+  },
+  "cover": {
+    "url": "https://mobilecdn.kugou.com/api/v3/search/song",
+    "method": "GET",
+    "params": {
+      "keyword": "{{id}}",
+      "page": "1",
+      "pagesize": "1",
+      "showtype": "1"
+    },
+    "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 6) return []; var cover = parts[5] || ''; if (!cover) return []; return [{coverUrl: cover.replace('/150/', '/400/'), thumbnailUrl: cover}];"
+  },
+  "lyrics": {
+    "url": "https://krcs.kugou.com/search",
+    "method": "GET",
+    "params": {
+      "ver": "1",
+      "man": "yes",
+      "client": "mobi",
+      "keyword": "{{id}}",
+      "duration": "0",
+      "hash": ""
+    },
+    "script": "var candidates = response.candidates || []; if (!candidates.length) return null; var first = candidates[0]; var lyricId = String(first.id); var accessKey = first.accesskey; if (!lyricId || !accessKey) return null; return {_fetchLyrics: true, lyricId: lyricId, accessKey: accessKey};"
+  }
+}
