@@ -1,18 +1,19 @@
 {
   "schema": 1,
-  "updatedAt": "2026-05-03T08:10:55Z",
+  "updatedAt": "2026-05-03T10:02:45Z",
   "bundleUrl": "bundle.json",
   "sources": [
     {
       "id": "kugou",
       "name": "酷狗音乐",
-      "version": 2,
+      "version": 3,
       "icon": "waveform",
       "color": "#2196F3",
       "capabilities": [
         "metadata",
         "cover",
-        "lyrics"
+        "lyrics",
+        "lyricsWordLevel"
       ],
       "url": "kugou.json"
     },
