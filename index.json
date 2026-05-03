@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-05-01T04:43:55Z",
+  "updatedAt": "2026-05-03T08:10:42Z",
   "bundleUrl": "bundle.json",
   "sources": [
     {
@@ -15,19 +15,6 @@
         "lyrics"
       ],
       "url": "kugou.json"
-    },
-    {
-      "id": "kuwo",
-      "name": "酷我音乐",
-      "version": 1,
-      "icon": "headphones",
-      "color": "#FF6600",
-      "capabilities": [
-        "metadata",
-        "cover",
-        "lyrics"
-      ],
-      "url": "kuwo.json"
     },
     {
       "id": "migu",
