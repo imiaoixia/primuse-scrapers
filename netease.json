@@ -1,7 +1,7 @@
 {
   "id": "netease",
   "name": "网易云音乐",
-  "version": 4,
+  "version": 5,
   "icon": "cloud",
   "color": "#E60026",
   "rateLimit": 1000,
@@ -20,17 +20,17 @@
       "limit": "{{limit}}",
       "offset": "0"
     },
-    "script": "var result=response.result||{};var songs=result.songs||[];var items=[];for(var i=0;i<songs.length;i++){var s=songs[i];if(!s.id)continue;var artists=s.artists||s.ar||[];var artistName=artists.map(function(a){return a.name}).join(' / ');var album=s.album||s.al||{};var albumName=album.name;var dur=s.duration||s.dt;var fallbackPicId=album.picId_str||(album.picId?String(album.picId):null);var marker='\"id\":'+String(s.id);var idx=responseText.indexOf(marker);var picId=fallbackPicId;if(idx>=0){var chunk=responseText.slice(Math.max(0,idx-800),idx);var matches=chunk.match(/\"picId\":(\\d+)/g);if(matches){for(var j=matches.length-1;j>=0;j--){var mm=matches[j].match(/(\\d+)/);if(mm&&mm[1]&&mm[1]!=='0'){picId=mm[1];break;}}}}var coverUrl=album.picUrl||album.blurPicUrl||(picId?nativeResolver.neteaseCover(String(picId),150):null);if(coverUrl&&coverUrl.indexOf('?param=')===-1)coverUrl=coverUrl+'?param=150y150';items.push({id:String(s.id),title:s.name||'',artist:artistName||null,album:albumName||null,durationMs:dur||null,coverUrl:coverUrl||null});}return items;"
+    "script": "var result=response.result||{};var songs=result.songs||[];var items=[];for(var i=0;i<songs.length;i++){var s=songs[i];if(!s.id)continue;var artists=s.artists||s.ar||[];var artistName=artists.map(function(a){return a.name}).join(' / ');var album=s.album||s.al||{};var albumName=album.name;var dur=s.duration||s.dt;var fallbackPicId=album.picId_str||(album.picId?String(album.picId):null);var marker='\"id\":'+String(s.id);var idx=responseText.indexOf(marker);var picId=fallbackPicId;if(idx>=0){var chunk=responseText.slice(Math.max(0,idx-800),idx);var matches=chunk.match(/\"picId\":(\\d+)/g);if(matches){for(var j=matches.length-1;j>=0;j--){var mm=matches[j].match(/(\\d+)/);if(mm&&mm[1]&&mm[1]!=='0'){picId=mm[1];break;}}}}var coverUrl=album.picUrl||album.blurPicUrl||nativeCoverUrl(picId);if(coverUrl&&coverUrl.indexOf('?param=')===-1)coverUrl=coverUrl+'?param=150y150';items.push({id:String(s.id),title:s.name||'',artist:artistName||null,album:albumName||null,durationMs:dur||null,coverUrl:coverUrl||null});}return items;"
   },
   "detail": {
     "url": "https://music.163.com/api/song/detail?ids=[{{id}}]&id={{id}}",
     "method": "GET",
-    "script": "var songs=response.songs||[];if(!songs.length)return null;var s=songs[0];var artists=s.artists||[];var artistName=artists.map(function(a){return a.name}).join(' / ');var album=s.album||{};var picId=album.picId_str||album.picId||null;var picUrl=album.picUrl||album.blurPicUrl||(picId?nativeResolver.neteaseCover(String(picId),500):null);if(picUrl&&picUrl.indexOf('?param=')===-1)picUrl=picUrl+'?param=500y500';return {title:s.name||'',artist:artistName||null,album:album.name||null,year:album.publishTime?new Date(album.publishTime).getFullYear():null,coverUrl:picUrl||null,genres:s.genres||null};"
+    "script": "var songs=response.songs||[];if(!songs.length)return null;var s=songs[0];var artists=s.artists||[];var artistName=artists.map(function(a){return a.name}).join(' / ');var album=s.album||{};var picId=album.picId_str||album.picId||null;var picUrl=album.picUrl||album.blurPicUrl||nativeCoverUrl(picId);if(picUrl&&picUrl.indexOf('?param=')===-1)picUrl=picUrl+'?param=500y500';return {title:s.name||'',artist:artistName||null,album:album.name||null,year:album.publishTime?new Date(album.publishTime).getFullYear():null,coverUrl:picUrl||null,genres:s.genres||null};"
   },
   "cover": {
     "url": "https://music.163.com/api/song/detail?ids=[{{id}}]&id={{id}}",
     "method": "GET",
-    "script": "var songs=response.songs||[];if(!songs.length)return [];var album=songs[0].album||{};var picId=album.picId_str||album.picId||null;var picUrl=album.picUrl||album.blurPicUrl||(picId?nativeResolver.neteaseCover(String(picId),500):null);if(!picUrl)return [];var thumb=picUrl.indexOf('?param=')===-1?picUrl+'?param=150y150':picUrl.replace(/\\?param=\\d+y\\d+$/,'?param=150y150');var full=picUrl.indexOf('?param=')===-1?picUrl+'?param=500y500':picUrl.replace(/\\?param=\\d+y\\d+$/,'?param=500y500');return [{coverUrl:full,thumbnailUrl:thumb}];"
+    "script": "var songs=response.songs||[];if(!songs.length)return [];var album=songs[0].album||{};var picId=album.picId_str||album.picId||null;var picUrl=album.picUrl||album.blurPicUrl||nativeCoverUrl(picId);if(!picUrl)return [];var thumb=picUrl.indexOf('?param=')===-1?picUrl+'?param=150y150':picUrl.replace(/\\?param=\\d+y\\d+$/,'?param=150y150');var full=picUrl.indexOf('?param=')===-1?picUrl+'?param=500y500':picUrl.replace(/\\?param=\\d+y\\d+$/,'?param=500y500');return [{coverUrl:full,thumbnailUrl:thumb}];"
   },
   "lyrics": {
     "url": "https://music.163.com/api/song/lyric?id={{id}}&lv=1&yv=1",
