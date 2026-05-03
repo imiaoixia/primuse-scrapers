@@ -1,7 +1,7 @@
 {
   "id": "kugou",
   "name": "酷狗音乐",
-  "version": 4,
+  "version": 6,
   "icon": "waveform",
   "color": "#2196F3",
   "rateLimit": 300,
@@ -49,12 +49,14 @@
     "method": "GET",
     "params": {
       "ver": "1",
-      "man": "yes",
+      "man": "no",
       "client": "mobi",
-      "keyword": "{{id}}",
-      "duration": "0",
-      "hash": ""
+      "keyword": "{{id[3]}} - {{id[2]}}",
+      "duration": "{{id[4]}}000",
+      "hash": "{{id[0]}}",
+      "appid": "3116",
+      "clientver": "11070"
     },
-    "script": "var candidates = response.candidates || []; if (!candidates.length) return null; var first = candidates[0]; var id = String(first.id); var ak = first.accesskey; if (!id || !ak) return null; return {_fetchEncryptedLyrics: true, vars: {lyricId: id, accessKey: ak}};"
+    "script": "var candidates = response.candidates || []; if (!candidates.length) return null; var list = []; for (var i = 0; i < candidates.length && list.length < 5; i++) { var c = candidates[i]; if (c.id && c.accesskey) list.push({lyricId: String(c.id), accessKey: String(c.accesskey)}); } if (!list.length) return null; return {_fetchEncryptedLyrics: true, vars: list};"
   }
 }
