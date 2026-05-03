@@ -1,7 +1,7 @@
 {
   "id": "kugou",
   "name": "酷狗音乐",
-  "version": 3,
+  "version": 4,
   "icon": "waveform",
   "color": "#2196F3",
   "rateLimit": 300,
@@ -55,6 +55,6 @@
       "duration": "0",
       "hash": ""
     },
-    "script": "var candidates = response.candidates || []; if (!candidates.length) return null; var first = candidates[0]; var lyricId = String(first.id); var accessKey = first.accesskey; if (!lyricId || !accessKey) return null; return {_fetchLyrics: true, lyricId: lyricId, accessKey: accessKey};"
+    "script": "var candidates = response.candidates || []; if (!candidates.length) return null; var first = candidates[0]; var id = String(first.id); var ak = first.accesskey; if (!id || !ak) return null; return {_fetchEncryptedLyrics: true, vars: {lyricId: id, accessKey: ak}};"
   }
 }

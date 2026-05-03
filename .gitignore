@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .vscode/
 .idea/
+
+# Secrets — never push platform-specific decryption keys / URL templates
+*.secrets.json
+!*.secrets.example.json
