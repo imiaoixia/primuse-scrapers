@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-05-03T08:10:42Z",
+  "updatedAt": "2026-05-03T08:10:55Z",
   "bundleUrl": "bundle.json",
   "sources": [
     {
@@ -32,13 +32,14 @@
     {
       "id": "netease",
       "name": "网易云音乐",
-      "version": 3,
+      "version": 4,
       "icon": "cloud",
       "color": "#E60026",
       "capabilities": [
         "metadata",
         "cover",
-        "lyrics"
+        "lyrics",
+        "lyricsWordLevel"
       ],
       "url": "netease.json"
     },
