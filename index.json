@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-05-03T10:02:45Z",
+  "updatedAt": "2026-05-03T10:08:48Z",
   "bundleUrl": "bundle.json",
   "sources": [
     {
@@ -18,15 +18,27 @@
       "url": "kugou.json"
     },
     {
-      "id": "migu",
-      "name": "咪咕音乐",
+      "id": "kuwo",
+      "name": "酷我音乐",
       "version": 1,
-      "icon": "music.note.list",
-      "color": "#FF0654",
+      "icon": "headphones",
+      "color": "#FF6600",
       "capabilities": [
         "metadata",
         "cover",
         "lyrics"
+      ],
+      "url": "kuwo.json"
+    },
+    {
+      "id": "migu",
+      "name": "咪咕音乐",
+      "version": 2,
+      "icon": "music.note.list",
+      "color": "#FF0654",
+      "capabilities": [
+        "metadata",
+        "cover"
       ],
       "url": "migu.json"
     },

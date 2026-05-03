@@ -1,7 +1,7 @@
 {
   "id": "migu",
   "name": "咪咕音乐",
-  "version": 1,
+  "version": 2,
   "icon": "music.note.list",
   "color": "#FF0654",
   "rateLimit": 300,
@@ -9,7 +9,7 @@
     "User-Agent": "Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36",
     "Referer": "https://music.migu.cn/"
   },
-  "capabilities": ["metadata", "cover", "lyrics"],
+  "capabilities": ["metadata", "cover"],
   "search": {
     "url": "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/search_all.do",
     "method": "GET",
@@ -40,10 +40,5 @@
     "url": "https://example.com",
     "method": "GET",
     "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 6) return []; var cover = parts[5] || ''; if (!cover) return []; var hd = cover.replace('_120', '_500').replace('/120/', '/500/').replace('_400', '_800').replace('/400/', '/800/'); return [{coverUrl: hd, thumbnailUrl: cover}];"
-  },
-  "lyrics": {
-    "url": "https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId={{id}}",
-    "method": "GET",
-    "script": "if (response.returnCode !== '000000') return null; var lyric = response.lyric || ''; if (!lyric) return null; return {lrcContent: lyric};"
   }
 }
