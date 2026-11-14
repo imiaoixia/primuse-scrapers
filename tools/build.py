@@ -14,10 +14,12 @@ META_FIELDS = ("id", "name", "version", "icon", "color", "capabilities")
 def load_sources():
     sources = []
     for path in sorted(ROOT.glob("*.json")):
-        if path.name in {"index.json", "bundle.json"}:
+        if path.name in {"index.json", "bundle.json"} or ".secrets." in path.name:
             continue
         with path.open(encoding="utf-8") as f:
             cfg = json.load(f)
+        if cfg.get("secrets"):
+            raise ValueError(f"{path.name}: private parameters cannot be published")
         if "id" not in cfg:
             print(f"skip {path.name}: missing id", file=sys.stderr)
             continue

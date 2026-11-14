@@ -1,15 +1,21 @@
 {
   "id": "kuwo",
   "name": "酷我音乐",
-  "version": 1,
+  "version": 2,
   "icon": "headphones",
   "color": "#FF6600",
   "rateLimit": 300,
   "headers": {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
   },
-  "capabilities": ["metadata", "cover", "lyrics"],
-  "sslTrustDomains": ["kuwo.cn"],
+  "capabilities": [
+    "metadata",
+    "cover",
+    "lyrics"
+  ],
+  "sslTrustDomains": [
+    "kuwo.cn"
+  ],
   "search": {
     "url": "https://search.kuwo.cn/r.s",
     "method": "GET",
@@ -41,12 +47,12 @@
     "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 7) return null; var pic = parts[6] || ''; if (pic) pic = pic.replace('/120/', '/500/').replace('/300/', '/500/'); return {title: parts[1]||'', artist: parts[2]||null, album: parts[3]||null, coverUrl: pic||null};"
   },
   "cover": {
-    "url": "https://example.com",
-    "method": "GET",
+    "url": "",
+    "method": "LOCAL",
     "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 7) return []; var pic = parts[6] || ''; if (!pic) return []; var hd = pic.replace('/120/', '/500/').replace('/300/', '/500/'); return [{coverUrl: hd, thumbnailUrl: pic}];"
   },
   "lyrics": {
-    "url": "https://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId={{id}}",
+    "url": "https://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId={{id[0]}}",
     "method": "GET",
     "script": "var data = response.data || {}; var lrclist = data.lrclist || []; if (!lrclist.length) return null; var lines = []; for (var i = 0; i < lrclist.length; i++) { var l = lrclist[i]; var t = parseFloat(l.time || '0'); var min = Math.floor(t/60); var sec = t % 60; lines.push('[' + String(min).padStart(2,'0') + ':' + sec.toFixed(2).padStart(5,'0') + ']' + (l.lineLyric||'')); } return {lrcContent: lines.join('\\n')};"
   }

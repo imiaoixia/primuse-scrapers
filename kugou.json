@@ -1,7 +1,7 @@
 {
   "id": "kugou",
   "name": "酷狗音乐",
-  "version": 6,
+  "version": 10,
   "icon": "waveform",
   "color": "#2196F3",
   "rateLimit": 300,
@@ -9,8 +9,20 @@
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     "Referer": "https://www.kugou.com/"
   },
-  "capabilities": ["metadata", "cover", "lyrics", "lyricsWordLevel"],
-  "sslTrustDomains": ["kugou.com", "mobilecdn.kugou.com", "imge.kugou.com", "krcs.kugou.com", "myqcloud.com"],
+  "capabilities": [
+    "metadata",
+    "cover",
+    "dynamicCover",
+    "lyrics",
+    "lyricsWordLevel"
+  ],
+  "sslTrustDomains": [
+    "kugou.com",
+    "mobilecdn.kugou.com",
+    "imge.kugou.com",
+    "krcs.kugou.com",
+    "myqcloud.com"
+  ],
   "search": {
     "url": "http://mobilecdn.kugou.com/api/v3/search/song",
     "method": "GET",
@@ -20,7 +32,7 @@
       "pagesize": "{{limit}}",
       "showtype": "1"
     },
-    "script": "var data = response.data || {}; var info = data.info || []; var results = []; for (var i = 0; i < info.length; i++) { var s = info[i]; var hash = s.hash || ''; var albumId = String(s.album_id || '0'); var tp = s.trans_param || {}; var cover = tp.union_cover || ''; if (cover) cover = cover.replace('{size}', '150'); var eid = [hash, albumId, s.songname||'', s.singername||'', String(s.duration||0), cover].join('|'); results.push({id: eid, title: s.songname||'', artist: s.singername||'', album: s.album_name, durationMs: (s.duration||0)*1000, coverUrl: cover||null}); } return results;"
+    "script": "var data = response.data || {}; var info = data.info || []; var results = []; for (var i = 0; i < info.length; i++) { var s = info[i]; var hash = s.hash || ''; var albumId = String(s.album_id || '0'); var audioId = String(s.album_audio_id || ''); var tp = s.trans_param || {}; var cover = tp.union_cover || ''; if (cover) cover = cover.replace('{size}', '150'); var eid = [hash, albumId, s.songname||'', s.singername||'', String(s.duration||0), cover, audioId].join('|'); results.push({id: eid, title: s.songname||'', artist: s.singername||'', album: s.album_name, durationMs: (s.duration||0)*1000, coverUrl: cover||null}); } return results;"
   },
   "detail": {
     "url": "http://mobilecdn.kugou.com/api/v3/search/song",
@@ -44,6 +56,38 @@
     },
     "script": "var parts = response._externalId ? response._externalId.split('|') : []; if (parts.length < 6) return []; var cover = parts[5] || ''; if (!cover) return []; return [{coverUrl: cover.replace('/150/', '/400/'), thumbnailUrl: cover}];"
   },
+  "dynamicCover": {
+    "url": "https://kmrcdn.service.kugou.com/v2/album/audio",
+    "method": "GET",
+    "headers": {
+      "dfid": "-"
+    },
+    "params": {
+      "appid": "1005",
+      "clientver": "20489",
+      "data": "[{\"album_audio_id\":{{id[6]}},\"album_id\":{{id[1]}}}]",
+      "isCdn": "1",
+      "query": "audioPlay"
+    },
+    "optional": true,
+    "requiredIdSegments": [
+      6
+    ],
+    "sign": {
+      "type": "md5-wrap",
+      "param": "signature",
+      "clientTimeHeader": "clienttime",
+      "saltSecret": "requestSalt"
+    },
+    "script": "if (response.status !== undefined && Number(response.status) !== 1) {\n    throw new Error(\"Artwork API error \" + response.status);\n}\nvar list = response.data || [];\nif (!list.length) return [];\nvar cover = list[0].dycover;\nif (!cover) return [];\nvar url = cover.h264_url || cover.h265_url || \"\";\nif (!url) return [];\nurl = url.replace(/^http:/i, \"https:\");\nreturn [{coverUrl: url, mimeType: \"video/mp4\", kind: \"video\"}];",
+    "requestScript": "var request = response;\nvar sign = request.sign;\nvar salt = (typeof secrets !== \"undefined\" && secrets[sign.saltSecret]) || sign.salt;\nif (!salt) throw new Error(\"Missing signing parameter\");\nvar params = request.params || {};\nif (typeof secrets !== \"undefined\" && secrets.requestDeviceID) request.headers.mid = secrets.requestDeviceID;\nvar query = Object.keys(params).sort().map(function (key) { return key + \"=\" + params[key]; }).join(\"\");\nparams[sign.param || \"signature\"] = nativeResolver.md5(salt + query + salt);\nrequest.headers[sign.clientTimeHeader || \"clienttime\"] = String(Math.floor(Date.now() / 1000));\nrequest.url += (request.url.indexOf(\"?\") < 0 ? \"?\" : \"&\") + Object.keys(params).map(function (key) {\n    return encodeURIComponent(key) + \"=\" + encodeURIComponent(params[key]);\n}).join(\"&\");\nreturn request;\n",
+    "assetHosts": [
+      "*.kugou.com",
+      "*.kugou.cn",
+      "*.myqcloud.com",
+      "kgv.stream.tencentmusic.com"
+    ]
+  },
   "lyrics": {
     "url": "http://krcs.kugou.com/search",
     "method": "GET",
@@ -58,5 +102,14 @@
       "clientver": "11070"
     },
     "script": "var candidates = response.candidates || []; if (!candidates.length) return null; var list = []; for (var i = 0; i < candidates.length && list.length < 5; i++) { var c = candidates[i]; if (c.id && c.accesskey) list.push({lyricId: String(c.id), accessKey: String(c.accesskey)}); } if (!list.length) return null; return {_fetchEncryptedLyrics: true, vars: list};"
+  },
+  "lyricsFallback": {
+    "url": "https://lyrics.kugou.com/download?ver=1&client=pc&id={{lyricId}}&accesskey={{accessKey}}&fmt=lrc&charset=utf8",
+    "contentField": "content",
+    "encoding": "base64UTF8",
+    "requiredVariables": [
+      "lyricId",
+      "accessKey"
+    ]
   }
 }
