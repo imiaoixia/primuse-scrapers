@@ -1,0 +1,53 @@
+{
+  "capabilities" : [
+    "metadata",
+    "cover"
+  ],
+  "color" : "#FF0654",
+  "cover" : {
+    "method" : "LOCAL",
+    "rule" : {
+      "format" : "groupedCatalogCover"
+    },
+    "url" : ""
+  },
+  "detail" : {
+    "method" : "LOCAL",
+    "params" : {
+      "pageNo" : "1",
+      "pageSize" : "1",
+      "searchSwitch" : "{\"song\":1}",
+      "text" : "{{id}}",
+      "ua" : "Android_migu",
+      "version" : "5.0.1"
+    },
+    "rule" : {
+      "format" : "groupedCatalogDetail"
+    },
+    "url" : "https:\/\/app.c.nf.migu.cn\/MIGUM2.0\/v1.0\/content\/search_all.do"
+  },
+  "headers" : {
+    "Referer" : "https:\/\/music.migu.cn\/",
+    "User-Agent" : "Mozilla\/5.0 (Linux; Android 11) AppleWebKit\/537.36"
+  },
+  "icon" : "music.note.list",
+  "id" : "migu",
+  "name" : "咪咕音乐",
+  "rateLimit" : 300,
+  "search" : {
+    "method" : "GET",
+    "params" : {
+      "pageNo" : "1",
+      "pageSize" : "{{limit}}",
+      "searchSwitch" : "{\"song\":1}",
+      "text" : "{{query}}",
+      "ua" : "Android_migu",
+      "version" : "5.0.1"
+    },
+    "rule" : {
+      "format" : "groupedCatalogSearch"
+    },
+    "url" : "https:\/\/app.c.nf.migu.cn\/MIGUM2.0\/v1.0\/content\/search_all.do"
+  },
+  "version" : 4
+}

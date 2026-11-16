@@ -1,0 +1,68 @@
+{
+  "capabilities" : [
+    "metadata",
+    "cover",
+    "lyrics"
+  ],
+  "color" : "#FF6600",
+  "cover" : {
+    "method" : "LOCAL",
+    "rule" : {
+      "format" : "quotedCatalogCover"
+    },
+    "url" : ""
+  },
+  "detail" : {
+    "method" : "LOCAL",
+    "params" : {
+      "all" : "{{id}}",
+      "client" : "kt",
+      "encoding" : "utf8",
+      "ft" : "music",
+      "itemset" : "web_2013",
+      "pn" : "0",
+      "rformat" : "json",
+      "rn" : "1"
+    },
+    "rule" : {
+      "format" : "quotedCatalogDetail"
+    },
+    "url" : "https:\/\/search.kuwo.cn\/r.s"
+  },
+  "headers" : {
+    "User-Agent" : "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36"
+  },
+  "icon" : "headphones",
+  "id" : "kuwo",
+  "lyrics" : {
+    "method" : "GET",
+    "rule" : {
+      "format" : "quotedCatalogLyrics"
+    },
+    "url" : "https:\/\/m.kuwo.cn\/newh5\/singles\/songinfoandlrc?musicId={{id[0]}}"
+  },
+  "name" : "酷我音乐",
+  "rateLimit" : 300,
+  "search" : {
+    "method" : "GET",
+    "params" : {
+      "all" : "{{query}}",
+      "client" : "kt",
+      "encoding" : "utf8",
+      "ft" : "music",
+      "itemset" : "web_2013",
+      "pn" : "0",
+      "rformat" : "json",
+      "rn" : "{{limit}}"
+    },
+    "rule" : {
+      "artworkBaseURL" : "https:\/\/img1.kuwo.cn\/",
+      "format" : "quotedCatalogSearch"
+    },
+    "url" : "https:\/\/search.kuwo.cn\/r.s"
+  },
+  "sslTrustDomains" : [
+    "kuwo.cn"
+  ],
+  "version" : 3
+}

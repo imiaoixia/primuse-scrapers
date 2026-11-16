@@ -1,0 +1,64 @@
+{
+  "capabilities" : [
+    "metadata",
+    "cover",
+    "lyrics"
+  ],
+  "color" : "#31C27C",
+  "cover" : {
+    "bodyTemplate" : "{\"comm\":{\"ct\":11,\"cv\":\"1003006\"},\"req_1\":{\"module\":\"music.pf_song_detail_svr\",\"method\":\"get_song_detail_yqq\",\"param\":{\"song_mid\":\"{{id}}\"}}}",
+    "headers" : {
+      "Content-Type" : "application\/json"
+    },
+    "method" : "POST",
+    "rule" : {
+      "artworkBaseURL" : "https:\/\/y.qq.com\/music\/photo_new\/T002R300x300M000",
+      "format" : "envelopeCatalogCover"
+    },
+    "url" : "https:\/\/u.y.qq.com\/cgi-bin\/musicu.fcg"
+  },
+  "detail" : {
+    "bodyTemplate" : "{\"comm\":{\"ct\":11,\"cv\":\"1003006\"},\"req_1\":{\"module\":\"music.pf_song_detail_svr\",\"method\":\"get_song_detail_yqq\",\"param\":{\"song_mid\":\"{{id}}\"}}}",
+    "headers" : {
+      "Content-Type" : "application\/json"
+    },
+    "method" : "POST",
+    "rule" : {
+      "artworkBaseURL" : "https:\/\/y.qq.com\/music\/photo_new\/T002R300x300M000",
+      "format" : "envelopeCatalogDetail"
+    },
+    "url" : "https:\/\/u.y.qq.com\/cgi-bin\/musicu.fcg"
+  },
+  "headers" : {
+    "Origin" : "https:\/\/y.qq.com",
+    "Referer" : "https:\/\/y.qq.com\/",
+    "User-Agent" : "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/120.0.0.0 Safari\/537.36"
+  },
+  "icon" : "music.note",
+  "id" : "qqmusic",
+  "lyrics" : {
+    "headers" : {
+      "Referer" : "https:\/\/y.qq.com\/portal\/player.html"
+    },
+    "method" : "GET",
+    "rule" : {
+      "format" : "envelopeCatalogLyrics"
+    },
+    "url" : "https:\/\/c.y.qq.com\/lyric\/fcgi-bin\/fcg_query_lyric_new.fcg?songmid={{id}}&format=json&nobase64=1&g_tk=5381"
+  },
+  "name" : "QQ音乐",
+  "rateLimit" : 500,
+  "search" : {
+    "bodyTemplate" : "{\"comm\":{},\"req_1\":{\"module\":\"music.search.SearchCgiService\",\"method\":\"DoSearchForQQMusicDesktop\",\"param\":{\"query\":\"{{query}}\",\"page_num\":1,\"num_per_page\":{{limit}},\"search_type\":0}}}",
+    "headers" : {
+      "Content-Type" : "application\/json"
+    },
+    "method" : "POST",
+    "rule" : {
+      "artworkBaseURL" : "https:\/\/y.qq.com\/music\/photo_new\/T002R300x300M000",
+      "format" : "envelopeCatalogSearch"
+    },
+    "url" : "https:\/\/u.y.qq.com\/cgi-bin\/musicu.fcg"
+  },
+  "version" : 3
+}
