@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "*.json"
+      - "1/**"
       - "tools/build.py"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
@@ -32,12 +33,15 @@ jobs:
           python-version: "3.x"
 
       - name: Generate resource index
-        run: python3 tools/build.py
+        run: |
+          python3 tools/build.py
+          python3 tools/build.py --directory 1 --schema 2 --entry 1.json
 
       - name: Prepare public resources
         run: |
           mkdir -p public
-          cp index.json bundle.json public/
+          cp index.json bundle.json 1.json public/
+          cp -R 1 public/
           cp kugou.json kuwo.json migu.json netease.json qqmusic.json public/
 
       - name: Upload Pages artifact
