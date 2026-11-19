@@ -1,12 +1,12 @@
 {
   "schema": 2,
-  "updatedAt": "2026-11-16T08:28:26Z",
+  "updatedAt": "2026-11-17T07:50:10Z",
   "bundleUrl": "bundle.json",
   "sources": [
     {
       "id": "kugou",
       "name": "酷狗音乐",
-      "version": 11,
+      "version": 12,
       "icon": "waveform",
       "color": "#2196F3",
       "capabilities": [
@@ -46,7 +46,7 @@
     {
       "id": "netease",
       "name": "网易云音乐",
-      "version": 11,
+      "version": 12,
       "icon": "cloud",
       "color": "#E60026",
       "capabilities": [
@@ -61,7 +61,7 @@
     {
       "id": "qqmusic",
       "name": "QQ音乐",
-      "version": 3,
+      "version": 4,
       "icon": "music.note",
       "color": "#31C27C",
       "capabilities": [
